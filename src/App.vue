@@ -6,52 +6,72 @@
       </header>
       <main>
         <AddPaymentForm @addNewPayment="addNewPayment" />
-        <PaymentsDisplay :items="paymentsList" />
+        <PaymentsDisplay :items="currentElements" />
+        <Pagination
+          @paginate="changePage"
+          :length="paymentsList.length"
+          :current="page"
+          :n="count"
+        />
       </main>
     </div>
   </div>
 </template>
 
 <script>
-import PaymentsDisplay from "./components/PaymentsDisplay";
+import PaymentsDisplay from "./components/PaymentsDisplay.vue";
 import AddPaymentForm from "./components/AddPaymentForm.vue";
+import Pagination from "./components/Pagination.vue";
+import { mapMutations, mapActions, mapGetters } from "vuex";
+
 export default {
   name: "App",
   components: {
     PaymentsDisplay,
     AddPaymentForm,
+    Pagination,
   },
   data() {
     return {
-      paymentsList: [],
+      page: 1,
+      count: 10,
     };
   },
   methods: {
-    fetchData() {
-      return [
-        {
-          date: "28.03.2020",
-          category: "Food",
-          value: 169,
-        },
-        {
-          date: "24.03.2020",
-          category: "Transport",
-          value: 360,
-        },
-        {
-          date: "24.03.2020",
-          category: "Food",
-          value: 532,
-        },
-      ];
-    },
     addNewPayment(data) {
-      this.paymentsList = [...this.paymentsList, data];
+      this.addPayment(data);
+      this.checkExist(data, this.categoryList, this.addCategory);
+    },
+    checkExist(data, getter, setter) {
+      const list = getter;
+      if (list.includes(data.category, 0)) {
+        return;
+      } else setter(data.category);
+    },
+    ...mapMutations({
+      updatePayments: "setPaymentsListData",
+      addPayment: "addDataToPaymentsList",
+      addCategory: "addCaregoryToCategoryList",
+    }),
+    // ...mapActions(["fetchData"]),
+    changePage(p) {
+      this.page = p;
     },
   },
+  computed: {
+    ...mapGetters({
+      categoryList: "getCategoryList",
+      paymentsList: "getPaymentsList",
+    }),
+    currentElements() {
+      console.log(this.paymentsList);
+      const { count, page } = this;
+      return this.paymentsList.slice(count * (page - 1), count * (page - 1) + count);
+    }
+  },
   created() {
-    this.paymentsList = this.fetchData();
+    // this.updatePayments(this.fetchData());
+    this.$store.dispatch("fetchData");
   },
 };
 </script>

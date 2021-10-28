@@ -2,22 +2,26 @@
   <div :class="[$style.wrapper]">
     <button @click="showAddForm = !showAddForm">ADD NEW COST+</button>
     <div v-if="showAddForm">
-      <input placeholder="Amount" v-model="amount" />
-      <input placeholder="Type" v-model="type" />
-      <input placeholder="Date" v-model="date" />
+      <input placeholder="Date" v-model="date" type="date" />
+      <select-category v-model="category" />
+      <input placeholder="Amount" v-model="amount" type="number" />
+      <!-- <input placeholder="Type" v-model="type" /> -->
       <button @click="onSaveClick">Save!</button>
     </div>
   </div>
 </template>
 
 <script>
+import SelectCategory from "./SelectCategory.vue";
+
 export default {
+  components: { SelectCategory },
   name: "AddPaymentForm",
   data() {
     return {
       amount: "",
-      type: "",
       date: "",
+      category: "",
       showAddForm: false,
     };
   },
@@ -32,9 +36,11 @@ export default {
   },
   methods: {
     onSaveClick() {
+      const today = new Date();
       const data = {
+        id: today.getMilliseconds(),
         value: +this.amount,
-        category: this.type,
+        category: this.category,
         date: this.date || this.getCurrentDate,
       };
       this.$emit("addNewPayment", data);

@@ -1,25 +1,26 @@
 <template>
   <div :class="[$style.wrapper]">
-    <tab :class="[$style.tablet]"
-      ><tr>
+    <table :class="[$style.tablet]">
+      <tr>
         <td :class="[$style.tab_col1]">#</td>
         <td :class="[$style.tab_col2]">Date</td>
         <td :class="[$style.tab_col3]">Category</td>
         <td :class="[$style.tab_col4]">Value</td>
       </tr>
       <tr v-for="(item, index) in items" v-bind:key="index">
-        <td :class="[$style.tab_col1]">{{ index }}</td>
+        <td :class="[$style.tab_col1]">{{ item.id}}</td>
         <td :class="[$style.tab_col2]">{{ item.date }}</td>
         <td :class="[$style.tab_col3]">{{ item.category }}</td>
         <td :class="[$style.tab_col4]">{{ item.value }}</td>
       </tr>
-    </tab>
+    </table>
 
-    <!-- </div> -->
+    <!-- {{ getFullPaymentValue }} -->
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   name: "PaymentsDisplay",
   props: {
@@ -27,6 +28,9 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  computed: {
+    ...mapGetters(["getPaymentsList", "getFullPaymentValue"]),
   },
 };
 </script>
