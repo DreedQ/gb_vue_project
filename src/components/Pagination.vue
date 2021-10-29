@@ -19,9 +19,10 @@
 export default {
   name: "Pagination",
   props: {
-    length: Number,
-    n: Number,
+    // length: Number,
+    // n: Number,
     current: Number,
+    amount: Number,
   },
   methods: {
     onClick(p) {
@@ -31,11 +32,11 @@ export default {
       this.$emit("paginate", p);
     },
   },
-  computed: {
-    amount() {
-      return Math.ceil(this.length / this.n);
-    },
-  },
+  // computed: {
+  //   amount() {
+  //     return Math.ceil(this.length / this.n);
+  //   },
+  // },
 };
 </script>
 

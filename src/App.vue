@@ -10,8 +10,9 @@
         <Pagination
           @paginate="changePage"
           :length="paymentsList.length"
-          :current="page"
+          :current="pageNum"
           :n="count"
+          :amount="currentPages"
         />
       </main>
     </div>
@@ -34,7 +35,9 @@ export default {
   data() {
     return {
       page: 1,
-      count: 10,
+      count: 3,
+      pageNum: 1,
+      // pagesCount: 0,
     };
   },
   methods: {
@@ -53,25 +56,33 @@ export default {
       addPayment: "addDataToPaymentsList",
       addCategory: "addCaregoryToCategoryList",
     }),
-    // ...mapActions(["fetchData"]),
     changePage(p) {
-      this.page = p;
+      this.pageNum = p;
+          this.$store.dispatch("fetchData", this.pageNum);
+
     },
   },
   computed: {
     ...mapGetters({
       categoryList: "getCategoryList",
       paymentsList: "getPaymentsList",
+      getPages: "getPageCount"
     }),
     currentElements() {
-      console.log(this.paymentsList);
+      // console.log(this.paymentsList);
       const { count, page } = this;
       return this.paymentsList.slice(count * (page - 1), count * (page - 1) + count);
+    },
+    currentPages(){
+      // console.log(this.getPages)
+     return this.getPages
     }
   },
   created() {
     // this.updatePayments(this.fetchData());
-    this.$store.dispatch("fetchData");
+    this.$store.dispatch("fetchData", this.pageNum);
+    this.$store.dispatch('loadPageCount')
+    // this.fetchData()
   },
 };
 </script>
