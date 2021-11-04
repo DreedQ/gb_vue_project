@@ -8,10 +8,10 @@
       <PaymentsDisplay :items="currentElements" />
       <Pagination
         @paginate="changePage"
-        :length="paymentsList.length"
-        :current="page"
-        :n="count"
-        :countPages="currentPages"
+        :paymentsCount="paymentsList.length"
+        :currentPage="page"
+        :itemsOnPage="count"
+        :countPagesInBase="getPages"
       />
     </main>
   </div>
@@ -35,7 +35,6 @@ export default {
       page: 1,
       count: 3,
       pageNum: 1,
-      // pagesCount: 0,
     };
   },
   methods: {
@@ -69,17 +68,16 @@ export default {
       getPages: "getPageCount",
     }),
     currentElements() {
-      // console.log(this.paymentsList);
+      console.log(this.paymentsList);
       const { count, page } = this;
       return this.paymentsList.slice(
         count * (page - 1),
         count * (page - 1) + count
       );
     },
-    currentPages() {
-      // console.log(this.getPages)
-      return this.getPages;
-    },
+    // countPagesInDB() {
+    //   return this.getPages;
+    // },
   },
   mounted() {
     const page = this.$route.params.page;

@@ -1,9 +1,9 @@
 <template>
   <div class="pagination_wrapper">
-    <div class="btn" @click="onClick(current - 1)">🠔</div>
+    <div class="btn" @click="onClick(currentPage - 1)">🠔</div>
     <div
       class="pages btn"
-      :class="{ active: current === i }"
+      :class="{ active: currentPage === i }"
       v-for="i in countPages"
       :key="i"
       @click="onClick(i)"
@@ -11,7 +11,7 @@
       {{ i }}
     </div>
 
-    <div class="btn" @click="onClick(current + 1)">🠖</div>
+    <div class="btn" @click="onClick(currentPage + 1)">🠖</div>
   </div>
 </template>
 
@@ -19,10 +19,10 @@
 export default {
   name: "Pagination",
   props: {
-    // length: Number,
-    // n: Number,
-    current: Number,
-    countPages: Number,
+    countPagesInBase: Number,
+    itemsOnPage: Number,
+    currentPage: Number,
+    paymentsCount: Number,
   },
   methods: {
     onClick(p) {
@@ -32,11 +32,14 @@ export default {
       this.$emit("paginate", p);
     },
   },
-  // computed: {
-  //   countPages() {
-  //     return Math.ceil(this.length / this.n);
-  //   },
-  // },
+  computed: {
+    countPages() {
+      let res = Math.ceil(this.paymentsCount / this.itemsOnPage);
+      if (res <= this.countPagesInBase) {
+        return this.countPagesInBase;
+      } else return res;
+    },
+  },
 };
 </script>
 

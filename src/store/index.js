@@ -9,7 +9,11 @@ export default new Vuex.Store({
     mutations: {
         setPaymentsListData(state, payload) {
             // state.paymentsList = payload
-            let findEl
+
+            state.paymentsList.push(...payload)
+        },
+        addDataToPaymentsList(state, payload) {
+            // state.paymentsList.push(payload)
             if (!Array.isArray(payload)) {
                 payload = [payload]
             }
@@ -18,10 +22,6 @@ export default new Vuex.Store({
                     return
                 } else state.paymentsList.push(element)
             });
-            // state.paymentsList.push(...payload)
-        },
-        addDataToPaymentsList(state, payload) {
-            state.paymentsList.push(payload)
         },
         setCategories(state, payload) {
             if (!Array.isArray(payload)) {
@@ -88,7 +88,7 @@ export default new Vuex.Store({
                     // console.log(res);
                     // console.log(res[`page` + pageNum]);
                     // console.log(this.state);
-                    commit('setPaymentsListData', res[`page` + pageNum])
+                    commit('addDataToPaymentsList', res[`page` + pageNum])
                 })
         },
         loadCategories({ commit }) {
