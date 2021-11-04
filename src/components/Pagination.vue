@@ -4,7 +4,7 @@
     <div
       class="pages btn"
       :class="{ active: current === i }"
-      v-for="i in amount"
+      v-for="i in countPages"
       :key="i"
       @click="onClick(i)"
     >
@@ -22,18 +22,18 @@ export default {
     // length: Number,
     // n: Number,
     current: Number,
-    amount: Number,
+    countPages: Number,
   },
   methods: {
     onClick(p) {
-      if (p < 1 || p > this.amount) {
+      if (p < 1 || p > this.countPages) {
         return;
       }
       this.$emit("paginate", p);
     },
   },
   // computed: {
-  //   amount() {
+  //   countPages() {
   //     return Math.ceil(this.length / this.n);
   //   },
   // },

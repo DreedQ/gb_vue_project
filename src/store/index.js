@@ -5,14 +5,20 @@ Vue.use(Vuex)
 
 
 export default new Vuex.Store({
-    state: { paymentsList: [], categoryList: [], pageCount: 0, URL: './base.json' },
+    state: { paymentsList: [], categoryList: [], pageCount: 0, },
     mutations: {
         setPaymentsListData(state, payload) {
-            state.paymentsList = payload
-                // if (!Array.isArray(payload)) {
-                //     payload = [payload]
-                // }
-                // state.paymentsList.push(...payload)
+            // state.paymentsList = payload
+            let findEl
+            if (!Array.isArray(payload)) {
+                payload = [payload]
+            }
+            payload.forEach(element => {
+                if (state.paymentsList.find(el => el.id == element.id)) {
+                    return
+                } else state.paymentsList.push(element)
+            });
+            // state.paymentsList.push(...payload)
         },
         addDataToPaymentsList(state, payload) {
             state.paymentsList.push(payload)
@@ -81,7 +87,7 @@ export default new Vuex.Store({
                 .then(res => {
                     // console.log(res);
                     // console.log(res[`page` + pageNum]);
-                    console.log(this.state);
+                    // console.log(this.state);
                     commit('setPaymentsListData', res[`page` + pageNum])
                 })
         },

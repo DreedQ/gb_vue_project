@@ -5,7 +5,6 @@
       <input placeholder="Date" v-model="date" type="date" />
       <select-category v-model="category" />
       <input placeholder="Amount" v-model="amount" type="number" />
-      <!-- <input placeholder="Type" v-model="type" /> -->
       <button @click="onSaveClick">Save!</button>
     </div>
   </div>
@@ -15,8 +14,8 @@
 import SelectCategory from "./SelectCategory.vue";
 
 export default {
-  components: { SelectCategory },
   name: "AddPaymentForm",
+  components: { SelectCategory },
   data() {
     return {
       amount: "",
@@ -25,6 +24,7 @@ export default {
       showAddForm: false,
     };
   },
+
   computed: {
     getCurrentDate() {
       const today = new Date();
@@ -41,9 +41,31 @@ export default {
         id: today.getMilliseconds(),
         value: +this.amount,
         category: this.category,
-        date: this.date || this.getCurrentDate,
+        date: this.getCurrentDate || this.date,
       };
-      this.$emit("addNewPayment", data);
+      if (this.date && this.amount && this.category) {
+        this.$emit("addNewPayment", data);
+      }
+    },
+  },
+  mounted() {},
+  watch: {
+    $route() {
+      const categoryRout = this.$route.params.category;
+      if (categoryRout) {
+        this.category = categoryRout;
+      }
+
+      const value = this.$route.params.amount;
+      if (value) {
+        this.amount = +value;
+      }
+
+      if (this.category || this.amount) {
+        this.showAddForm = true;
+        this.date = this.getCurrentDate;
+        console.log(this.date);
+      }
     },
   },
 };

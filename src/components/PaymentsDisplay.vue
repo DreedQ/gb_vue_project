@@ -8,7 +8,7 @@
         <td :class="[$style.tab_col4]">Value</td>
       </tr>
       <tr v-for="(item, index) in items" v-bind:key="index">
-        <td :class="[$style.tab_col1]">{{ item.id}}</td>
+        <td :class="[$style.tab_col1]">{{ item.id }}</td>
         <td :class="[$style.tab_col2]">{{ item.date }}</td>
         <td :class="[$style.tab_col3]">{{ item.category }}</td>
         <td :class="[$style.tab_col4]">{{ item.value }}</td>
