@@ -3,6 +3,17 @@ import App from './App.vue'
 
 Vue.config.productionTip = false
 
+import contextMenu from "./plugins/ContextMenu/index"
+import modal from "./plugins/ModalWindow/index.js"
+import store from './store'
+import router from './router'
+
+Vue.use(contextMenu)
+Vue.use(modal)
+
 new Vue({
-  render: h => h(App),
+    // comments: { App },
+    render: h => h(App),
+    store,
+    router,
 }).$mount('#app')
