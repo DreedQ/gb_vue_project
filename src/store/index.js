@@ -35,17 +35,44 @@ export default new Vuex.Store({
         setPageCount(state, payload) {
             state.pageCount = Object.keys(payload).length
         },
+        deletteDataFromPaymentList(state, id) {
+            let index = state.paymentsList.findIndex(item => item.id == id);
+            state.paymentsList.splice(index, 1)
+        },
+        changeDataInPaymentList(state, payload) {
+            let index = state.paymentsList.findIndex(item => item.id == payload.id);
+            state.paymentsList[index] = payload;
+        }
 
     },
     getters: {
         getPaymentsList: state => state.paymentsList,
         getFullPaymentValue: state => {
-            return state.paymentsList.reduce((res, cur) => res + cur.value, 0)
+            return state.paymentsList.reduce((res, cur) => res + +cur.value, 0)
         },
         getCategoryList: state => state.categoryList,
         getPageCount: state => state.pageCount
     },
     actions: {
+        fetchDataList({ commit }) {
+            return new Promise(resolve => {
+                setTimeout(() => {
+                    const items = [];
+                    for (let i = 1; i < 101; i++) {
+                        items.push({
+                            id: i,
+                            date: "2020.03.28",
+                            category: "Food",
+                            value: +i
+                        });
+                    }
+                    resolve(items)
+                }, 1000);
+            }).then(res => {
+                commit("setPaymentsListData", res);
+            });
+        },
+
         fetchData({ commit }, pageNum) {
             return new Promise((resolve) => {
                     setTimeout(() => {

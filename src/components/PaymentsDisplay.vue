@@ -7,20 +7,19 @@
         <td :class="[$style.tab_col3]">Category</td>
         <td :class="[$style.tab_col4]">Value</td>
       </tr>
-      <tr v-for="(item, index) in items" v-bind:key="index">
+      <tr v-for="(item, index) in items" :key="index">
         <td :class="[$style.tab_col1]">{{ item.id }}</td>
         <td :class="[$style.tab_col2]">{{ item.date }}</td>
         <td :class="[$style.tab_col3]">{{ item.category }}</td>
         <td :class="[$style.tab_col4]">{{ item.value }}</td>
+        <td :class="[$style.tab_col5]" @click="onClickItem(item, $event)">⫶</td>
       </tr>
     </table>
-
-    <!-- {{ getFullPaymentValue }} -->
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   name: "PaymentsDisplay",
   props: {
@@ -29,8 +28,35 @@ export default {
       default: () => [],
     },
   },
-  computed: {
-    ...mapGetters(["getPaymentsList", "getFullPaymentValue"]),
+
+  methods: {
+    onClickItem(item, event) {
+      const items = [
+        {
+          text: "Edit",
+          action: () => {
+            this.$contextMenu.changeMenu(item);
+          },
+        },
+        {
+          text: "Delette",
+          action: () => {
+            this.deleteItemFromDB(item.id);
+            this.$contextMenu.hide();
+          },
+        },
+      ];
+      this.$contextMenu.show({ items, event });
+    },
+    actionDelete(id) {
+      console.log("delete");
+      //mutation
+      this.contextMenu.hide();
+    },
+    ...mapMutations({
+      deleteItemFromDB: "deletteDataFromPaymentList",
+      changeItemInDB: "changeDataInPaymentList",
+    }),
   },
 };
 </script>
@@ -62,6 +88,15 @@ export default {
       width: 35px;
       padding: 3px 15px 3px 15px;
       border-bottom: 1px solid rgb(206, 185, 185);
+    }
+    .tab_col5 {
+      width: 10px;
+      padding: 3px 15px 3px 15px;
+      border-bottom: 1px solid rgb(206, 185, 185);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

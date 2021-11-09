@@ -1,17 +1,18 @@
 <template>
   <div>
     <div class="display">
-      <input v-model.number="operand1" type="number" />
-      <input v-model.number="operand2" type="number" />
+      <input v-model.number="operand1" type="number" name="operand1" />
+      <input v-model.number="operand2" type="number" name="operand2" />
       = {{ result }} <br />
-      fib(<input v-model.number="operand1" />) fib(<input
+      <!-- fib(<input v-model.number="operand1" />) fib(<input
         v-model.number="operand2"
-      />) = {{ fibResult }}
+      />) = {{ fibResult }} -->
     </div>
     <div v-show="error">Ошибка! {{ error }}</div>
     <div class="keyboard">
       <button
         v-for="operand in operands"
+        :name="operand"
         v-bind:key="operand"
         v-bind:title="operand"
         v-bind:disabled="operand1 === '' || operand2 === ''"
@@ -20,12 +21,18 @@
         {{ operand }}
       </button>
       <br />
-      <input type="checkbox" id="screenKeyboard" v-model="screenKeyboardShow" />
+      <input
+        type="checkbox"
+        id="screenKeyboard"
+        v-model="screenKeyboardShow"
+        :name="screenKeyboard"
+      />
       <label for="screenKeyboard">Screen keyboard</label>
 
       <button
         v-show="screenKeyboardShow"
         v-for="key in keyboards"
+        :name="`btn` + key"
         v-bind:key="key"
         v-bind:title="key"
         @click="enterNum(key, chosenOperand)"
@@ -38,6 +45,7 @@
         id="operand1"
         value="operand1"
         v-model="chosenOperand"
+        :name="radio1"
       />
       <label for="operand1">Operand One</label>
 
@@ -46,6 +54,7 @@
         id="operand2"
         value="operand2"
         v-model="chosenOperand"
+        :name="radio2"
       />
       <label for="operand2">Operand Two</label>
       <br />
@@ -92,11 +101,11 @@ export default {
   },
   methods: {
     add() {
-      this.result = this.operand1 + this.operand2;
+      this.result = +this.operand1 + +this.operand2;
       this.fibResult = this.fibb1 + this.fibb2;
     },
     substract() {
-      this.result = this.operand1 - this.operand2;
+      this.result = +this.operand1 - +this.operand2;
       this.fibResult = this.fibb1 - this.fibb2;
     },
     divide() {
@@ -104,21 +113,21 @@ export default {
       if (operand2 === 0) {
         this.error = "Делить на 0 нельзя!";
       } else {
-        this.result = operand1 / operand2;
+        this.result = +operand1 / +operand2;
         this.fibResult = this.fibb1 / this.fibb2;
       }
     },
     multiply() {
-      this.result = this.operand1 * this.operand2;
+      this.result = +this.operand1 * +this.operand2;
       this.fibResult = this.fibb1 * this.fibb2;
     },
     pow() {
-      this.result = this.operand1 ** this.operand2;
+      this.result = (+this.operand1) ** +this.operand2;
       this.fibResult = this.fibb1 ** this.fibb2;
     },
     intDivision() {
       this.result =
-        (this.operand1 - (this.operand1 % this.operand2)) / this.operand2;
+        (+this.operand1 - (+this.operand1 % +this.operand2)) / +this.operand2;
       this.fibResult = this.fibb1 - (this.fibb1 % this.fibb2) / this.fibb2;
     },
     calculate(operation = "+") {
@@ -153,8 +162,17 @@ export default {
     enterNum(numb, operand) {
       if (numb == "<-Backspace") {
         let str = this[operand].toString();
-        str = str.slice(0, -1);
-        this[operand] = parseInt(str);
+
+        if (str.length == 1) {
+          this[operand] = parseInt(str);
+          return (this[operand] = 0);
+          //
+        } else if ((str = str.slice(0, -1))) {
+          this[operand] = parseInt(str);
+        }
+      } else if (this[operand] == 0) {
+        return (this[operand] = numb);
+        //
       } else return (this[operand] += numb);
     },
   },

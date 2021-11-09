@@ -1,7 +1,6 @@
 <template>
   <div :class="[$style.wrapper]">
-    <button @click="showAddForm = !showAddForm">ADD NEW COST+</button>
-    <div v-if="showAddForm">
+    <div>
       <input placeholder="Date" v-model="date" type="date" />
       <select-category v-model="category" />
       <input placeholder="Amount" v-model="amount" type="number" />
@@ -21,7 +20,6 @@ export default {
       amount: "",
       date: "",
       category: "",
-      showAddForm: false,
     };
   },
 
@@ -31,7 +29,7 @@ export default {
       const d = today.getDate();
       const m = today.getMonth() + 1;
       const y = today.getFullYear();
-      return `${d}.${m}.${y}`;
+      return `${y}.${m}.${d}`;
     },
   },
   methods: {
@@ -44,11 +42,11 @@ export default {
         date: this.getCurrentDate || this.date,
       };
       if (this.date && this.amount && this.category) {
-        this.$emit("addNewPayment", data);
+        // this.$emit("addNewPayment", data);
+        this.$modal.addPayment(data);
       }
     },
   },
-  mounted() {},
   watch: {
     $route() {
       const categoryRout = this.$route.params.category;
