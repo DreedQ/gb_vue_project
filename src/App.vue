@@ -1,40 +1,23 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/dashboard">Dashboard</router-link> /
-      <router-link to="/about">About</router-link> /
-      <router-link to="/notfound">Not Found!</router-link> /
-      <router-link to="/calculator">Calculator</router-link>
-    </nav>
-    <header>
-      <router-link to="/add/payment/Food/value=500">Add: Food/500</router-link>
-      /
-      <router-link to="/add/payment/Transport/value=50"
-        >Addt: Transport/50</router-link
+  <v-app>
+    <v-app-bar app flat color="teal">
+      <v-btn small plain :ripple="false" dark to="/dashboard">Dashboard</v-btn>
+      <v-btn small plain :ripple="false" dark to="/about">About</v-btn>
+      <v-btn small plain :ripple="false" dark to="/calculator"
+        >Calculator</v-btn
       >
-      /
-      <router-link to="/add/payment/Entertainment/value=2000"
-        >Add: Entertainment/2000</router-link
-      >
-    </header>
+    </v-app-bar>
 
-    <main>
+    <v-main>
       <router-view />
-      <transition name="fade">
-        <ModalWindow
-          v-if="modalName"
-          :modalName="modalName"
-          :modalWindowSettings="modalWindowSettings"
-        />
-      </transition>
-      <transition name="fade">
-        <context-menu
-          :changeActionShow="changeActionShow"
-          :itemToChange="item"
-        />
-      </transition>
-    </main>
-  </div>
+      <!-- <ModalWindow
+        v-if="modalName"
+        :modalName="modalName"
+        :modalWindowSettings="modalWindowSettings"
+      />
+      <context-menu :changeActionShow="changeActionShow" :itemToChange="item" /> -->
+    </v-main>
+  </v-app>
 </template>
 
 <script>
@@ -44,8 +27,8 @@ import ModalWindow from "./components/ModalWindow.vue";
 export default {
   name: "App",
   components: {
-    ModalWindow,
-    ContextMenu,
+    // ModalWindow,
+    // ContextMenu,
   },
   data() {
     return {
@@ -58,7 +41,6 @@ export default {
       changeActionShow: false,
     };
   },
-
   methods: {
     onShown(settings) {
       this.modalName = settings.name;
@@ -83,26 +65,10 @@ export default {
     this.$modal.EventBus.$on("hide", this.onHide);
     this.$contextMenu.EventBus.$on("shownChangeItem", this.openChangeItem);
   },
-
   created() {
     // this.$router.push({ name: "Dashboard" });
-    this.$store.dispatch("fetchData", this.pageNum);
-    this.$store.dispatch("loadPageCount");
+    // this.$store.dispatch("fetchData", this.pageNum);
+    // this.$store.dispatch("loadPageCount");
   },
 };
 </script>
-
-<style lang="scss" module>
-.wrapper {
-  background-color: rgb(243, 235, 235);
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-</style>
