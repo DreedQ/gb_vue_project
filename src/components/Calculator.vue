@@ -25,19 +25,19 @@
         type="checkbox"
         id="screenKeyboard"
         v-model="screenKeyboardShow"
-        :name="screenKeyboard"
+        name="screenKeyboard"
       />
       <label for="screenKeyboard">Screen keyboard</label>
 
       <button
         v-show="screenKeyboardShow"
-        v-for="key in keyboards"
-        :name="`btn` + key"
-        v-bind:key="key"
-        v-bind:title="key"
-        @click="enterNum(key, chosenOperand)"
+        v-for="btnKey in keyboards"
+        :name="btnKey"
+        v-bind:key="btnKey"
+        v-bind:title="btnKey"
+        @click="enterNum(btnKey, chosenOperand)"
       >
-        {{ key }}
+        {{ btnKey }}
       </button>
       <br />
       <input
@@ -45,7 +45,7 @@
         id="operand1"
         value="operand1"
         v-model="chosenOperand"
-        :name="radio1"
+        name="radio1"
       />
       <label for="operand1">Operand One</label>
 
@@ -54,7 +54,7 @@
         id="operand2"
         value="operand2"
         v-model="chosenOperand"
-        :name="radio2"
+        name="radio2"
       />
       <label for="operand2">Operand Two</label>
       <br />
@@ -177,12 +177,12 @@ export default {
     },
   },
   computed: {
-    fibb1() {
-      return this.fib(this.operand1);
-    },
-    fibb2() {
-      return this.fib(this.operand2);
-    },
+    // fibb1() {
+    //   return this.fib(this.operand1);
+    // },
+    // fibb2() {
+    //   return this.fib(this.operand2);
+    // },
   },
 };
 </script>
