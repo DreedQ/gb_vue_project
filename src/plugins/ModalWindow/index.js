@@ -18,6 +18,7 @@ export default {
                 this.EventBus.$emit('hide')
             },
             addPayment(data) {
+
                 this.EventBus.$emit('addDPaymentData', data)
             }
         }

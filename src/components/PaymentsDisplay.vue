@@ -69,7 +69,6 @@ export default {
     },
     actionDelete(id) {
       console.log("delete");
-      //mutation
       this.contextMenu.hide();
     },
     ...mapMutations({

@@ -20,18 +20,15 @@
               Add New Payment
             </v-card-text>
             <v-card-actions>
-              <!-- <v-spacer></v-spacer> -->
-              <add-payment-form />
-              <!-- <v-btn text color="teal" dark @click="dialog = false"> -->
-              <!-- Save
-              </v-btn> -->
+              <v-spacer></v-spacer>
+              <add-payment-form :categoryItems="categoryItems" />
             </v-card-actions>
           </v-card>
         </v-dialog>
         <PaymentsDisplay :items="paymentsList" />
       </v-col>
       <v-col cols="4"
-        ><v-container><chart /></v-container>
+        ><v-container><chart :spendings="spendings"/></v-container>
       </v-col>
     </v-row>
   </v-container>
@@ -41,7 +38,7 @@
 import PaymentsDisplay from "../components/PaymentsDisplay.vue";
 import AddPaymentForm from "../components/AddPaymentForm.vue";
 import Chart from "../components/Chart.vue";
-import { mapMutations, mapGetters, mapActions } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "Dashboard",
@@ -56,12 +53,14 @@ export default {
       count: 10,
       pageNum: 1,
       dialog: false,
+      categoryItems: [],
+
+      spendings: getSpendings,
     };
   },
   methods: {
     openChangeItem() {
       this.$emit("openChangeItem");
-      console.log(2);
     },
     openModal() {
       this.$modal.show("AddPaymentForm", {
@@ -79,37 +78,25 @@ export default {
       } else setter(data.category);
     },
     ...mapMutations({
-      updatePayments: "setPaymentsListData",
+      // updatePayments: "setPaymentsListData",
       addPayment: "addDataToPaymentsList",
       addCategory: "addCaregoryToCategoryList",
+      // setSpendingList: "setSpendingCounts",
     }),
-    changePage(p) {
-      this.page = p;
-      // this.$store.dispatch("fetchData", this.page);
-    },
   },
   computed: {
     ...mapGetters({
-      categoryList: "getCategoryList",
+      getCategoryList: "getCategoryList",
       paymentsList: "getPaymentsList",
-      // getPages: "getPageCount",
       getFullCoast: "getFullPaymentValue",
+      getSpendings: "getSpendings",
     }),
-    // currentElements() {
-    //   //   console.log(this.paymentsList);
-    //   const { count, page } = this;
-    //   return this.paymentsList.slice(
-    //     count * (page - 1),
-    //     count * (page - 1) + count
-    //   );
-    // },
   },
+
   mounted() {
-    const page = this.$route.params.page;
-    if (page) {
-      this.page = Number(page);
-    }
-    this.$store.dispatch("fetchDataList");
+    this.categoryItems = this.getCategoryList;
+    this.$store.dispatch("loadCategories");
+    this.$store.dispatch("fetchData");
     this.$modal.EventBus.$on("addDPaymentData", this.addNewPayment);
   },
 };

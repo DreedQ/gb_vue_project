@@ -1,7 +1,6 @@
 <template>
   <v-container>
-    <v-card class="align-center">
-      <!-- <input placeholder="Date" v-model="date" type="date" /> -->
+    <v-card class="align-center" flat>
       <v-menu
         v-model="menu"
         :close-on-content-click="false"
@@ -23,8 +22,12 @@
         <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
       </v-menu>
       <v-spacer></v-spacer>
-      <v-select :items="items" label="Category" color="teal"></v-select>
-      <!-- <select-category v-model="category" /> -->
+      <v-select
+        :items="categoryItems"
+        v-model="category"
+        label="Category"
+        color="teal"
+      ></v-select>
       <v-spacer></v-spacer>
       <v-text-field
         v-model="amount"
@@ -32,7 +35,6 @@
         label="Amount"
         color="teal"
       ></v-text-field>
-      <!-- <input placeholder="Amount" v-model="amount" type="number" /> -->
       <v-btn class="" @click="onSaveClick">Save!</v-btn>
     </v-card>
   </v-container>
@@ -50,6 +52,9 @@ export default {
       items: [],
       menu: false,
     };
+  },
+  props: {
+    categoryItems: Array,
   },
   computed: {
     getCurrentDate() {
@@ -72,6 +77,7 @@ export default {
       };
       if (this.date && this.amount && this.category) {
         // this.$emit("addNewPayment", data);
+        // console.log(this.categoryItems);
         this.$modal.addPayment(data);
       }
     },
@@ -96,7 +102,7 @@ export default {
     },
   },
   mounted() {
-    console.log(getCategoryList);
+    // console.log(this.categoryItems);
   },
 };
 </script>

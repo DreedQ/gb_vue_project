@@ -10,12 +10,6 @@
 
     <v-main>
       <router-view />
-      <!-- <ModalWindow
-        v-if="modalName"
-        :modalName="modalName"
-        :modalWindowSettings="modalWindowSettings"
-      />
-      <context-menu :changeActionShow="changeActionShow" :itemToChange="item" /> -->
     </v-main>
   </v-app>
 </template>
@@ -33,9 +27,9 @@ export default {
   data() {
     return {
       item: {},
-      page: 1,
-      count: 3,
-      pageNum: 1,
+      // page: 1,
+      // count: 3,
+      // pageNum: 1,
       modalName: "",
       modalWindowSettings: {},
       changeActionShow: false,
@@ -66,9 +60,16 @@ export default {
     this.$contextMenu.EventBus.$on("shownChangeItem", this.openChangeItem);
   },
   created() {
-    // this.$router.push({ name: "Dashboard" });
+    this.$router.push({ name: "Dashboard" });
+    this.$store.dispatch("fetchDataList");
+
     // this.$store.dispatch("fetchData", this.pageNum);
     // this.$store.dispatch("loadPageCount");
+  },
+  beforeDestroy() {
+    this.$modal.EventBus.$off("shown", this.onShown);
+    this.$modal.EventBus.$off("hide", this.onHide);
+    this.$contextMenu.EventBus.$off("shownChangeItem", this.openChangeItem);
   },
 };
 </script>
