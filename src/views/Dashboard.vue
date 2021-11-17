@@ -54,8 +54,7 @@ export default {
       pageNum: 1,
       dialog: false,
       categoryItems: [],
-
-      spendings: getSpendings,
+      spendings: {},
     };
   },
   methods: {
@@ -78,10 +77,8 @@ export default {
       } else setter(data.category);
     },
     ...mapMutations({
-      // updatePayments: "setPaymentsListData",
       addPayment: "addDataToPaymentsList",
       addCategory: "addCaregoryToCategoryList",
-      // setSpendingList: "setSpendingCounts",
     }),
   },
   computed: {
@@ -96,8 +93,10 @@ export default {
   mounted() {
     this.categoryItems = this.getCategoryList;
     this.$store.dispatch("loadCategories");
-    this.$store.dispatch("fetchData");
     this.$modal.EventBus.$on("addDPaymentData", this.addNewPayment);
+  },
+  created() {
+    this.spendings = this.getSpendings;
   },
 };
 </script>

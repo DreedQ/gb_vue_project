@@ -5,7 +5,7 @@ Vue.use(Vuex)
 
 
 export default new Vuex.Store({
-    state: { paymentsList: [], categoryList: [] },
+    state: { paymentsList: [], categoryList: [], spendings: {} },
     mutations: {
         setPaymentsListData(state, payload) {
             state.paymentsList.push(...payload)
@@ -20,6 +20,11 @@ export default new Vuex.Store({
                     return
                 } else state.paymentsList.push(element)
             });
+        },
+        addDataToPaymentsListNew(state, payload) {
+            for (let i = 1; i <= 6; i++) {
+                state.paymentsList.push(...payload[`page` + i])
+            }
         },
         setCategories(state, payload) {
             if (!Array.isArray(payload)) {
@@ -46,7 +51,7 @@ export default new Vuex.Store({
     getters: {
         getSpendings(state) {
             let payments = state.paymentsList;
-            const spendings = { categoryes: [], values: [] };
+            let spendings = { categoryes: [], values: [] };
             payments.forEach((element) => {
                 if (
                     spendings.categoryes.find((el) => el == element.category) != undefined
@@ -60,7 +65,8 @@ export default new Vuex.Store({
                     spendings.values.push(element.value);
                 }
             });
-            return spendings;
+            console.log(spendings)
+            return state.spendings = Object.assign({}, state.spendings, { categoryes: spendings.categoryes, values: spendings.values })
         },
         getPaymentsList: state => state.paymentsList,
         getFullPaymentValue: state => {
@@ -131,7 +137,7 @@ export default new Vuex.Store({
                     // console.log(res);
                     // console.log(res[`page` + pageNum]);
                     // console.log(this.state);
-                    commit('addDataToPaymentsList', res[`page1`])
+                    commit('addDataToPaymentsListNew', res)
                 })
         },
         loadCategories({ commit }) {

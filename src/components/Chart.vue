@@ -1,10 +1,10 @@
 <script>
 import { Doughnut } from "vue-chartjs";
+import { mapGetters } from "vuex";
 export default {
   extends: Doughnut,
   props: { spendings: Object },
   mounted() {
-    console.log(this.spendings);
     this.renderChart({
       labels: this.spendings.categoryes,
       datasets: [

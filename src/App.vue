@@ -15,23 +15,11 @@
 </template>
 
 <script>
-import ContextMenu from "./components/ContextMenu.vue";
-import ModalWindow from "./components/ModalWindow.vue";
-
 export default {
   name: "App",
-  components: {
-    // ModalWindow,
-    // ContextMenu,
-  },
   data() {
     return {
       item: {},
-      // page: 1,
-      // count: 3,
-      // pageNum: 1,
-      modalName: "",
-      modalWindowSettings: {},
       changeActionShow: false,
     };
   },
@@ -39,7 +27,6 @@ export default {
     onShown(settings) {
       this.modalName = settings.name;
       this.modalWindowSettings = settings;
-      // console.log(this.ModalWindoW);
     },
     onHide() {
       this.modalName = "";
@@ -63,8 +50,7 @@ export default {
     this.$router.push({ name: "Dashboard" });
     this.$store.dispatch("fetchDataList");
 
-    // this.$store.dispatch("fetchData", this.pageNum);
-    // this.$store.dispatch("loadPageCount");
+    this.$store.dispatch("fetchData");
   },
   beforeDestroy() {
     this.$modal.EventBus.$off("shown", this.onShown);

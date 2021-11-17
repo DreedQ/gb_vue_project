@@ -76,8 +76,6 @@ export default {
         date: this.getCurrentDate || this.date,
       };
       if (this.date && this.amount && this.category) {
-        // this.$emit("addNewPayment", data);
-        // console.log(this.categoryItems);
         this.$modal.addPayment(data);
       }
     },
