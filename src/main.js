@@ -7,6 +7,7 @@ import contextMenu from "./plugins/ContextMenu/index"
 import modal from "./plugins/ModalWindow/index.js"
 import store from './store'
 import router from './router'
+import vuetify from './plugins/vuetify'
 
 Vue.use(contextMenu)
 Vue.use(modal)
@@ -14,6 +15,8 @@ Vue.use(modal)
 new Vue({
     // comments: { App },
     render: h => h(App),
+
     store,
-    router,
+    vuetify,
+    router
 }).$mount('#app')
