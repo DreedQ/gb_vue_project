@@ -1,62 +1,79 @@
 <template>
-  <div class="context" v-if="shown">
-    <div class="context_item" v-for="item in items" :key="item.item">
-      <button @click="item.action" class="context_item-btn">
-        {{ item.text }}
-      </button>
-    </div>
-    <div v-if="changeActionShow">
-      <input placeholder="Date" v-model="itemToChange.date" type="date" />
-      <select-category v-model="itemToChange.category" />
-      <input placeholder="Amount" v-model="itemToChange.value" type="number" />
-      <button @click="saveChange">Save!</button>
-    </div>
-  </div>
+  <v-container>
+    <v-card-text class="text-h5 text-center pt-3">
+      Correct Your Payment
+    </v-card-text>
+    <v-card class="align-center" plain flat :ripple="false">
+      <v-menu
+        v-model="menu"
+        :close-on-content-click="false"
+        :nudge-right="40"
+        transition="scale-transition"
+        offset-y
+        min-width="auto"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-text-field
+            v-model="itemToChange.date"
+            label="Date"
+            prepend-icon="mdi-calendar"
+            readonly
+            v-bind="attrs"
+            v-on="on"
+          ></v-text-field>
+        </template>
+        <v-date-picker
+          v-model="itemToChange.date"
+          @input="menu = false"
+          color="teal"
+        ></v-date-picker>
+      </v-menu>
+      <v-combobox
+        v-model="itemToChange.category"
+        :items="getCategoryList"
+        label="Category"
+        clearable
+        color="teal"
+      ></v-combobox>
+      <v-text-field
+        v-model="itemToChange.value"
+        type="number"
+        label="Amount"
+        color="teal"
+      ></v-text-field>
+      <v-btn @click="saveChange">Save!</v-btn>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
-// import { mapMutations } from "../store/index";
-import SelectCategory from "./SelectCategory.vue";
+import { mapGetters } from "vuex";
 export default {
   name: "ContextMenu",
-  components: { SelectCategory },
   data() {
     return {
       items: [],
-      shown: false,
+      // shown: false,
       caller: "",
       amount: "",
       date: "",
       category: "",
+      menu: false,
     };
   },
-  props: { changeActionShow: Boolean, itemToChange: Object },
+  props: { itemToChange: Object },
   methods: {
-    onShown({ items, caller }) {
-      //   console.log(items, caller);
-      this.items = { ...items };
-      this.caller = caller;
-      this.shown = true;
-    },
-    onClose() {
-      this.items = [];
-      this.shown = false;
-      this.changeActionShow = false;
-    },
+    // onClose() {
+    //   this.items = [];
+    //   // this.shown = false;
+    //   // this.changeActionShow = false;
+    // },
     saveChange(item) {
       this.$emit("changeItemInDB", item);
       this.$contextMenu.hide();
-      this.changeActionShow = false;
     },
   },
-  mounted() {
-    this.$contextMenu.EventBus.$on("shown", this.onShown);
-    this.$contextMenu.EventBus.$on("hide", this.onClose);
-  },
-  beforeDestroy() {
-    this.$contextMenu.EventBus.$off("shown", this.onShown);
-    this.$contextMenu.EventBus.$off("hide", this.onClose);
-  },
+  computed: { ...mapGetters(["getCategoryList"]) },
 };
 </script>
 

@@ -18,8 +18,10 @@ export default {
                 this.EventBus.$emit('hide')
             },
             addPayment(data) {
-
                 this.EventBus.$emit('addDPaymentData', data)
+            },
+            addCategory(data) {
+                this.EventBus.$emit('addCategoryData', data)
             }
         }
     }

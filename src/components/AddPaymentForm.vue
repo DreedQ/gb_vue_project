@@ -19,23 +19,26 @@
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" @input="menu = false"></v-date-picker>
+        <v-date-picker
+          v-model="date"
+          @input="menu = false"
+          color="teal"
+        ></v-date-picker>
       </v-menu>
-      <v-spacer></v-spacer>
-      <v-select
-        :items="categoryItems"
+      <v-combobox
         v-model="category"
+        :items="getCategoryList"
         label="Category"
+        clearable
         color="teal"
-      ></v-select>
-      <v-spacer></v-spacer>
+      ></v-combobox>
       <v-text-field
         v-model="amount"
         type="number"
         label="Amount"
         color="teal"
       ></v-text-field>
-      <v-btn class="" @click="onSaveClick">Save!</v-btn>
+      <v-btn @click="onSaveClick">Save!</v-btn>
     </v-card>
   </v-container>
 </template>
@@ -77,6 +80,7 @@ export default {
       };
       if (this.date && this.amount && this.category) {
         this.$modal.addPayment(data);
+        this.$modal.addCategory(data);
       }
     },
   },

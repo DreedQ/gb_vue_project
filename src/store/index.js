@@ -5,13 +5,12 @@ Vue.use(Vuex)
 
 
 export default new Vuex.Store({
-    state: { paymentsList: [], categoryList: [], spendings: {} },
+    state: { paymentsList: [], categoryList: [], spendings: { categoryes: [], values: [] } },
     mutations: {
         setPaymentsListData(state, payload) {
             state.paymentsList.push(...payload)
         },
         addDataToPaymentsList(state, payload) {
-            // state.paymentsList.push(payload)
             if (!Array.isArray(payload)) {
                 payload = [payload]
             }
@@ -33,23 +32,22 @@ export default new Vuex.Store({
             state.categoryList.push(...payload)
         },
         addCaregoryToCategoryList(state, payload) {
-            state.categoryList.push(payload)
-        },
-        setPageCount(state, payload) {
-            state.pageCount = Object.keys(payload).length
+            if (state.categoryList.find(cat => cat == payload.category) !== undefined) {
+                return
+            } else
+                return state.categoryList.push(payload.category)
         },
         deletteDataFromPaymentList(state, id) {
             let index = state.paymentsList.findIndex(item => item.id == id);
             state.paymentsList.splice(index, 1)
         },
         changeDataInPaymentList(state, payload) {
+            console.log(payload)
             let index = state.paymentsList.findIndex(item => item.id == payload.id);
-            state.paymentsList[index] = payload;
-        },
+            state.paymentsList.splice(index, 1, payload)
 
-    },
-    getters: {
-        getSpendings(state) {
+        },
+        setSpendings(state) {
             let payments = state.paymentsList;
             let spendings = { categoryes: [], values: [] };
             payments.forEach((element) => {
@@ -59,20 +57,41 @@ export default new Vuex.Store({
                     let index = spendings.categoryes.findIndex(
                         (elem) => elem == element.category
                     );
-                    spendings.values[index] += element.value;
+                    spendings.values[index] += +element.value;
                 } else {
                     spendings.categoryes.push(element.category);
-                    spendings.values.push(element.value);
+                    spendings.values.push(+element.value);
                 }
             });
-            console.log(spendings)
-            return state.spendings = Object.assign({}, state.spendings, { categoryes: spendings.categoryes, values: spendings.values })
+            state.spendings = Object.assign({}, state.spendings, { categoryes: spendings.categoryes, values: spendings.values })
         },
+        setMoreCategoryes(state, payload) {
+            let temporaryItemList = [];
+            let temporaryCatList = [];
+
+            // console.log(temporaryList)
+            for (let i = 1; i <= 6; i++) {
+                temporaryItemList.push(...payload[
+                    `page` + i])
+            }
+            temporaryItemList.forEach(el => {
+                    temporaryCatList.push(el.category)
+                })
+                // console.log(temporaryCatList)
+            temporaryCatList.forEach(element => {
+                if (state.categoryList.find(item => element == item) != undefined) {
+                    return
+                } else state.categoryList.push(element)
+            })
+        },
+    },
+    getters: {
         getPaymentsList: state => state.paymentsList,
         getFullPaymentValue: state => {
             return state.paymentsList.reduce((res, cur) => res + +cur.value, 0)
         },
         getCategoryList: state => state.categoryList,
+        getSpendings: state => state.spendings,
     },
     actions: {
 
@@ -137,13 +156,15 @@ export default new Vuex.Store({
                     // console.log(res);
                     // console.log(res[`page` + pageNum]);
                     // console.log(this.state);
-                    commit('addDataToPaymentsListNew', res)
+                    commit('addDataToPaymentsListNew', res);
+                    commit('setSpendings')
+                    commit('setMoreCategoryes', res)
                 })
         },
         loadCategories({ commit }) {
             return new Promise((resolve) => {
                     setTimeout(() => {
-                        resolve(['Food', 'Transport', 'Education', 'Entertainment'])
+                        resolve(['Food', 'Transport', 'Education', 'Entertaiment'])
                     }, 1000)
                 })
                 .then(res => {

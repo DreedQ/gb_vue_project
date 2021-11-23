@@ -26,6 +26,7 @@ export default {
             },
             changeMenu(item) {
                 this.EventBus.$emit('shownChangeItem', item)
+                console.log(item)
             },
         }
     }

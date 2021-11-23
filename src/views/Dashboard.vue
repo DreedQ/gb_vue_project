@@ -20,15 +20,14 @@
               Add New Payment
             </v-card-text>
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <add-payment-form :categoryItems="categoryItems" />
+              <add-payment-form :categoryItems="getCategoryList" />
             </v-card-actions>
           </v-card>
         </v-dialog>
         <PaymentsDisplay :items="paymentsList" />
       </v-col>
-      <v-col cols="4"
-        ><v-container><chart :spendings="spendings"/></v-container>
+      <v-col cols="4">
+        <v-container><Chart :spendings="getSpendings"/></v-container>
       </v-col>
     </v-row>
   </v-container>
@@ -53,8 +52,6 @@ export default {
       count: 10,
       pageNum: 1,
       dialog: false,
-      categoryItems: [],
-      spendings: {},
     };
   },
   methods: {
@@ -69,6 +66,10 @@ export default {
     },
     addNewPayment(data) {
       this.addPayment(data);
+      this.setSpendings();
+    },
+    addNewCategory(data) {
+      this.addCategory(data);
     },
     checkExist(data, getter, setter) {
       const list = getter;
@@ -79,24 +80,22 @@ export default {
     ...mapMutations({
       addPayment: "addDataToPaymentsList",
       addCategory: "addCaregoryToCategoryList",
+      setSpendings: "setSpendings",
     }),
   },
   computed: {
     ...mapGetters({
       getCategoryList: "getCategoryList",
       paymentsList: "getPaymentsList",
-      getFullCoast: "getFullPaymentValue",
+      // getFullCoast: "getFullPaymentValue",
       getSpendings: "getSpendings",
     }),
   },
 
   mounted() {
-    this.categoryItems = this.getCategoryList;
     this.$store.dispatch("loadCategories");
     this.$modal.EventBus.$on("addDPaymentData", this.addNewPayment);
-  },
-  created() {
-    this.spendings = this.getSpendings;
+    this.$modal.EventBus.$on("addCategoryData", this.addNewCategory);
   },
 };
 </script>
